@@ -30,6 +30,10 @@ func main() {
 
 	db.AutoMigrate(&auth.User{})
 	db.AutoMigrate(&item.Item{})
+	db.AutoMigrate(&item.CartItem{})
+	db.AutoMigrate(&item.Orders{})
+	db.AutoMigrate(&item.OrderItem{})
+	db.AutoMigrate(&item.Images{})
 	// db.AutoMigrate(&tag.SongTag{})
 
 	userRepository := auth.NewRepo(db)
