@@ -116,3 +116,31 @@ func (h *handlerTag) Create(c *gin.Context) {
 // // 	return buku
 
 // // }
+
+func (h *handlerTag) AddSize(c *gin.Context) {
+	// var image item.Images2Input
+	var item item.SizeInput
+	err := c.ShouldBind(&item)
+	if err != nil {
+
+		messages := []string{}
+
+		for _, e := range err.(validator.ValidationErrors) {
+			errormsg := fmt.Sprintf("Error pada field %s, condition %s", e.Field(), e.ActualTag())
+			messages = append(messages, errormsg)
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": messages,
+		})
+		return
+
+	}
+	h.itemService.AddSize(item)
+	// images := item.Images
+
+	// h.itemService.Pap(images)
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "berhasil",
+	})
+}

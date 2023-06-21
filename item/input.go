@@ -7,9 +7,15 @@ type ItemInput struct {
 	Description string   `json:"description" binding:"required"`
 	Images      []string `json:"images" binding:"required"`
 	Size_Chart  string   `json:"size_chart" binding:"required"`
+	Stock       []int    `json:"stock" binding:"required"`
 }
 
 type Images2Input struct {
 	Based      string `json:"based" binding:"required"`
 	Product_ID int    `json:"product_id" binding:"required"`
+}
+
+// ================================================================
+type SizeInput struct {
+	Size_Name string `json:"size_name" binding:"required"`
 }

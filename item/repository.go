@@ -12,6 +12,8 @@ type Repository interface {
 	FindAll(filter string, sort string) ([]Item, error)
 	Create(item Item) (Item, error)
 	Pap(img Images2) (Images2, error)
+	AddSize(size Size) (Size, error)
+	AddStock(size Product_size_stock) (Product_size_stock, error)
 }
 
 type repository struct {
@@ -83,4 +85,32 @@ func (r *repository) Pap(img Images2) (Images2, error) {
 	}
 
 	return img, err
+}
+
+// Undirect----------------------------------------------
+func (r *repository) AddStock(stock Product_size_stock) (Product_size_stock, error) {
+
+	err := r.db.Create(&stock).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return stock, err
+}
+
+// DEV-Only==============================================
+func (r *repository) AddSize(size Size) (Size, error) {
+
+	err := r.db.Create(&size).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return size, err
 }

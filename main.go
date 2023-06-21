@@ -19,6 +19,9 @@ import (
 
 func main() {
 	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Fail To Load Env")
+	}
 	DB_USER := os.Getenv("USER")
 	DB_PASS := os.Getenv("PASS")
 	DB := os.Getenv("DB")
@@ -35,6 +38,8 @@ func main() {
 	db.AutoMigrate(&item.OrderItem{})
 	db.AutoMigrate(&item.Images{})
 	db.AutoMigrate(&item.Images2{})
+	db.AutoMigrate(&item.Size{})
+	db.AutoMigrate(&item.Product_size_stock{})
 	// db.AutoMigrate(&tag.SongTag{})
 
 	userRepository := auth.NewRepo(db)
@@ -55,6 +60,8 @@ func main() {
 
 	// dev only
 	v1.GET("/users", middleware.RequireAuth, userHandler.GetAllUsers)
+	v1.POST("/add-size", itemHandler.AddSize)
+
 	// v1.POST("/image", itemHandler.Pap)
 
 	// UNIVERSAL
@@ -66,20 +73,29 @@ func main() {
 
 	// ADMIN
 	v1.POST("/item", itemHandler.Create)
+	// v1.GET("/admin/items", itemHandler.)
+	// v1.DELETE("/products", itemHandler.)
+	// v1.PUT("/item", itemHandler.)
+	// v1.PUT("/ongkir", itemHandler.)
+	// v1.POST("/orders", itemHandler.)
+	// v1.POST("/sale", itemHandler.)
 
 	// USER
 	v1.GET("/user", middleware.RequireAuth, userHandler.UserProfile)
-	v1.POST("/cange_address", userHandler.UpdateAddress)
+	v1.POST("/change_address", middleware.RequireAuth, userHandler.UpdateAddress)
+	// v1.GET("/user/order", middleware.RequireAuth, itemHandler.)
+	// v1.GET("/change_name", middleware.RequireAuth, itemHandler.)
 
 	// ITEM
-	v1.GET("/catalog", itemHandler.Catalog)
+	v1.GET("/products", itemHandler.Catalog)
 	// v1.GET("/recommended", )
+	// v1.GET("/products/{ID}", itemHandler.Catalog)
 
 	// ORDER
-	v1.GET("/cart", itemHandler.Catalog)
+	// v1.GET("/cart", itemHandler.Catalog)
 	// v1.DELETE("/cart/", )
 	// v1.POST("/order", )
-	// v1.POST("/cart", )
+	// v1.POST("/cart", itemHandler.AddToCart)
 	// v1.GET("/user/shipping_address", )
 	// v1.GET("/shipping_price", )
 
