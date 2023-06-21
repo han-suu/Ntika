@@ -8,8 +8,10 @@ import (
 )
 
 type Repository interface {
+	Find(item Item) (Item, error)
 	FindAll(filter string, sort string) ([]Item, error)
 	Create(item Item) (Item, error)
+	Pap(img Images2) (Images2, error)
 }
 
 type repository struct {
@@ -55,4 +57,30 @@ func (r *repository) Create(item Item) (Item, error) {
 	}
 
 	return item, err
+}
+
+func (r *repository) Find(item Item) (Item, error) {
+
+	err := r.db.Find(&item).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return item, err
+}
+
+func (r *repository) Pap(img Images2) (Images2, error) {
+
+	err := r.db.Create(&img).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return img, err
 }

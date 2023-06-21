@@ -8,6 +8,7 @@ type Item struct {
 	Category    string
 	Price       int
 	Description string
+	Size_Chart  string
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -56,6 +57,33 @@ type Images struct {
 	ID         int
 	Path       int
 	Product_ID int
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Images2 struct {
+	ID         int
+	Based      string
+	Product_ID int
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Size struct {
+	ID        int
+	Size_Name string
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Product_size_stock struct {
+	ID         int
+	Size_ID    int
+	Product_ID int
+	Stock      int
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

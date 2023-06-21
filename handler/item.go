@@ -51,6 +51,7 @@ func (h *handlerTag) Catalog(c *gin.Context) {
 }
 
 func (h *handlerTag) Create(c *gin.Context) {
+	// var image item.Images2Input
 	var item item.ItemInput
 	err := c.ShouldBind(&item)
 	if err != nil {
@@ -68,11 +69,38 @@ func (h *handlerTag) Create(c *gin.Context) {
 
 	}
 	h.itemService.Create(item)
+	// images := item.Images
+
+	// h.itemService.Pap(images)
 
 	c.JSON(http.StatusOK, gin.H{
 		"msg": item,
 	})
 }
+
+// func (h *handlerTag) Pap(c *gin.Context) {
+// 	var img item.Images2Input
+// 	err := c.ShouldBind(&img)
+// 	if err != nil {
+
+// 		messages := []string{}
+
+// 		for _, e := range err.(validator.ValidationErrors) {
+// 			errormsg := fmt.Sprintf("Error pada field %s, condition %s", e.Field(), e.ActualTag())
+// 			messages = append(messages, errormsg)
+// 		}
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"msg": messages,
+// 		})
+// 		return
+
+// 	}
+// 	h.itemService.Pap(img)
+
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"msg": img,
+// 	})
+// }
 
 // // func convertToResponseTag(b song.Song) song.SongResponse {
 

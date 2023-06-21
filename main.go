@@ -34,6 +34,7 @@ func main() {
 	db.AutoMigrate(&item.Orders{})
 	db.AutoMigrate(&item.OrderItem{})
 	db.AutoMigrate(&item.Images{})
+	db.AutoMigrate(&item.Images2{})
 	// db.AutoMigrate(&tag.SongTag{})
 
 	userRepository := auth.NewRepo(db)
@@ -54,14 +55,33 @@ func main() {
 
 	// dev only
 	v1.GET("/users", middleware.RequireAuth, userHandler.GetAllUsers)
+	// v1.POST("/image", itemHandler.Pap)
 
+	// UNIVERSAL
+	v1.Static("/image", "./static/")
+
+	// AUTH
 	v1.POST("/sign-up", userHandler.CreateUser)
 	v1.POST("/sign-in", userHandler.SignIn)
-	v1.Static("/image", "./static/")
-	v1.GET("/catalog", itemHandler.Catalog)
+
+	// ADMIN
 	v1.POST("/item", itemHandler.Create)
+
+	// USER
 	v1.GET("/user", middleware.RequireAuth, userHandler.UserProfile)
 	v1.POST("/cange_address", userHandler.UpdateAddress)
+
+	// ITEM
+	v1.GET("/catalog", itemHandler.Catalog)
+	// v1.GET("/recommended", )
+
+	// ORDER
+	v1.GET("/cart", itemHandler.Catalog)
+	// v1.DELETE("/cart/", )
+	// v1.POST("/order", )
+	// v1.POST("/cart", )
+	// v1.GET("/user/shipping_address", )
+	// v1.GET("/shipping_price", )
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
