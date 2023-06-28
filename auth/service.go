@@ -8,7 +8,7 @@ import (
 
 type Service interface {
 	FindAll() ([]User, error)
-	FindByEmail(email string) (User, error)
+	FindByEmail(email any) (User, error)
 	Create(userInput UserInput) (User, error)
 	SignIn(signin SignIn) (User, error)
 	UpdateAddress(addressInput AddressInput, user_email string) (User, error)
@@ -26,12 +26,11 @@ func (s *service) Create(userInput UserInput) (User, error) {
 
 	hash, _ := bcrypt.GenerateFromPassword([]byte(userInput.Password), 10)
 	user := User{
-		FullName: userInput.FullName,
-		UserName: userInput.UserName,
+		Name:     userInput.Name,
 		Email:    userInput.Email,
 		Password: string(hash),
 		Phone:    userInput.Phone,
-		Type:     userInput.Type,
+		Type:     "buyer",
 	}
 	newuser, err := s.repository.Create(user)
 	return newuser, err
@@ -62,7 +61,7 @@ func (s *service) UpdateAddress(addressInput AddressInput, user_email string) (U
 	return newaddress, err
 }
 
-func (s *service) FindByEmail(email string) (User, error) {
+func (s *service) FindByEmail(email any) (User, error) {
 	user, err := s.repository.FindByEmail(email)
 	return user, err
 }

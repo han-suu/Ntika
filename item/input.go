@@ -15,6 +15,12 @@ type Images2Input struct {
 	Product_ID int    `json:"product_id" binding:"required"`
 }
 
+type CartInput struct {
+	Product_ID int    `json:"product_id" binding:"required"`
+	Quantity   int    `json:"qty" binding:"required"`
+	Size       string `json:"size" binding:"required"`
+}
+
 // ================================================================
 type SizeInput struct {
 	Size_Name string `json:"size_name" binding:"required"`

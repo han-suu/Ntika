@@ -1,6 +1,9 @@
 package item
 
-import "fmt"
+import (
+	"fmt"
+	"ntika/auth"
+)
 
 // import "fmt"
 
@@ -8,6 +11,7 @@ type Service interface {
 	FindAll(filter string, sort string) ([]Item, error)
 
 	Create(tagInput ItemInput) (Item, error)
+	AddToCart(tagInput CartInput, user auth.User) (CartItem, error)
 	// Pap(tagInput Images2Input) (Images2, error)
 	// Pap(tagInput string) (Images2, error)
 	AddSize(tagInput SizeInput) (Size, error)
@@ -65,6 +69,26 @@ func (s *service) Create(itemInput ItemInput) (Item, error) {
 	return newtag, err
 }
 
+func (s *service) AddToCart(itemInput CartInput, user auth.User) (CartItem, error) {
+
+	print("SEROIS")
+	// ADD ITEM
+	item := CartItem{
+		Product_ID: itemInput.Product_ID,
+		Quantity:   itemInput.Quantity,
+		Size:       itemInput.Size,
+		User_ID:    user.ID,
+	}
+	// print(item)
+	newtag, err := s.repository.AddToCart(item)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return newtag, err
+}
+
 // func (s *service) Pap(itemInput Images2Input) (Images2, error) {
 
 // 	img := Images2{
@@ -85,8 +109,8 @@ func (s *service) Create(itemInput ItemInput) (Item, error) {
 // 		newtag, err := s.repository.Pap(img)
 // 	}
 
-// 	return newtag, err
-// }
+//		return newtag, err
+//	}
 func (s *service) AddSize(tagInput SizeInput) (Size, error) {
 
 	item := Size{

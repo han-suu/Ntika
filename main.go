@@ -51,9 +51,9 @@ func main() {
 	itemHandler := handler.NewHandlerItems(itemService, userService)
 
 	r := gin.Default()
-	// r.Use(CORSMiddleware())
+	r.Use(CORSMiddleware())
 
-	v1 := r.Group("/v1").Use(CORSMiddleware())
+	v1 := r.Group("/v1")
 	// ex := r.Group("/ex").Use(CORSMiddleware2())
 	// api := r.Group("/api").Use(CORSMiddleware())
 	// v1.Use(CORSMiddleware())
@@ -68,7 +68,7 @@ func main() {
 	v1.Static("/image", "./static/")
 
 	// AUTH
-	v1.POST("/sign-up", userHandler.CreateUser)
+	v1.POST("/sign-up", CORSMiddleware(), userHandler.CreateUser)
 	v1.POST("/sign-in", userHandler.SignIn)
 
 	// ADMIN
@@ -95,7 +95,7 @@ func main() {
 	// v1.GET("/cart", itemHandler.Catalog)
 	// v1.DELETE("/cart/", )
 	// v1.POST("/order", )
-	// v1.POST("/cart", itemHandler.AddToCart)
+	v1.POST("/cart", middleware.RequireAuth, itemHandler.AddToCart)
 	// v1.GET("/user/shipping_address", )
 	// v1.GET("/shipping_price", )
 

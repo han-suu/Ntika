@@ -78,6 +78,40 @@ func (h *handlerTag) Create(c *gin.Context) {
 	})
 }
 
+func (h *handlerTag) AddToCart(c *gin.Context) {
+	// var image item.Images2Input
+	println("HAND1")
+	var cart item.CartInput
+	err := c.ShouldBind(&cart)
+	if err != nil {
+
+		messages := []string{}
+
+		for _, e := range err.(validator.ValidationErrors) {
+			errormsg := fmt.Sprintf("Error pada field %s, condition %s", e.Field(), e.ActualTag())
+			messages = append(messages, errormsg)
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": messages,
+		})
+		return
+
+	}
+	println("HAND2")
+	user, _ := c.Get("user")
+	find, err := h.userService.FindByEmail(user)
+
+	println("HAND")
+	h.itemService.AddToCart(cart, find)
+	// images := item.Images
+
+	// h.itemService.Pap(images)
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "BerhasilAddToCart",
+	})
+}
+
 // func (h *handlerTag) Pap(c *gin.Context) {
 // 	var img item.Images2Input
 // 	err := c.ShouldBind(&img)

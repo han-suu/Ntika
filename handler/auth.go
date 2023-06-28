@@ -181,17 +181,17 @@ func (h *handler) UpdateAddress(c *gin.Context) {
 
 func Ambil(c *gin.Context) string {
 	// Get the Cookie
-	tokenString, err := c.Cookie("Authorization")
+	tokenString := c.GetHeader("Authorization")
 
-	if err != nil {
+	if tokenString == "" {
 		fmt.Println("ERROR GAES")
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"Message": "Authorization Header Not Found"})
-		return "x"
+		return "Authorization Header No"
 	}
 
 	// Decode/validate
 
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

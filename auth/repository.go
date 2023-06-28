@@ -10,7 +10,7 @@ type Repository interface {
 	Create(song User) (User, error)
 	SignIn(signin SignIn) (User, error)
 	UpdateAddress(user User) (User, error)
-	FindByEmail(email string) (User, error)
+	FindByEmail(email any) (User, error)
 }
 
 type repository struct {
@@ -77,7 +77,7 @@ func (r *repository) UpdateAddress(user User) (User, error) {
 	return user, err
 }
 
-func (r *repository) FindByEmail(email string) (User, error) {
+func (r *repository) FindByEmail(email any) (User, error) {
 	var user User
 
 	err := r.db.Where("email = ?", email).First(&user).Error

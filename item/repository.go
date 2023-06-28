@@ -11,6 +11,8 @@ type Repository interface {
 	Find(item Item) (Item, error)
 	FindAll(filter string, sort string) ([]Item, error)
 	Create(item Item) (Item, error)
+	AddToCart(cart CartItem) (CartItem, error)
+	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
 	AddStock(size Product_size_stock) (Product_size_stock, error)
@@ -59,6 +61,19 @@ func (r *repository) Create(item Item) (Item, error) {
 	}
 
 	return item, err
+}
+
+func (r *repository) AddToCart(cart CartItem) (CartItem, error) {
+
+	err := r.db.Debug().Create(&cart).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return cart, err
 }
 
 func (r *repository) Find(item Item) (Item, error) {
