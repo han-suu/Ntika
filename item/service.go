@@ -15,6 +15,7 @@ type Service interface {
 	// Pap(tagInput Images2Input) (Images2, error)
 	// Pap(tagInput string) (Images2, error)
 	AddSize(tagInput SizeInput) (Size, error)
+	UpdateStock(stockInput StockInput) (Product_size_stock, error)
 }
 
 type service struct {
@@ -87,6 +88,36 @@ func (s *service) AddToCart(itemInput CartInput, user auth.User) (CartItem, erro
 	}
 
 	return newtag, err
+}
+
+func (s *service) UpdateStock(stockInput StockInput) (Product_size_stock, error) {
+
+	// item_stock := Product_size_stock{
+	// 	Size_ID    : stockInput.Size_ID,
+	// 	Product_ID : stockInput.Size_ID,
+	// 	Stock      int
+	// }
+
+	item, err := s.repository.FindStock(stockInput.Product_ID, stockInput.Size_ID)
+	if err != nil {
+		fmt.Println(err)
+		return item, err
+	}
+	item.Stock += stockInput.Stock
+	// user.Address = addressInput.Address
+
+	newstock, err := s.repository.UpdateStock(item)
+	fmt.Printf("error service %s", err)
+	fmt.Println("")
+	return newstock, err
+	// item := Size{
+	// 	Size_Name: tagInput.Size_Name,
+	// }
+	// newtag, err := s.repository.AddSize(item)
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 }
 
 // func (s *service) Pap(itemInput Images2Input) (Images2, error) {

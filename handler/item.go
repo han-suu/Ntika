@@ -112,6 +112,42 @@ func (h *handlerTag) AddToCart(c *gin.Context) {
 	})
 }
 
+func (h *handlerTag) UpdateStock(c *gin.Context) {
+	// var image item.Images2Input
+	var item_stock item.StockInput
+	err := c.ShouldBind(&item_stock)
+	if err != nil {
+
+		messages := []string{}
+
+		for _, e := range err.(validator.ValidationErrors) {
+			errormsg := fmt.Sprintf("Error pada field %s, condition %s", e.Field(), e.ActualTag())
+			messages = append(messages, errormsg)
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": messages,
+		})
+		return
+
+	}
+	newStock, err := h.itemService.UpdateStock(item_stock)
+	fmt.Printf("error handler %s", err)
+	fmt.Println("")
+	// images := item.Images
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "GAGAL GES, mungkin belum ada",
+		})
+		return
+	}
+	// h.itemService.Pap(images)
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg":   "berhasil",
+		"stock": newStock,
+	})
+}
+
 // func (h *handlerTag) Pap(c *gin.Context) {
 // 	var img item.Images2Input
 // 	err := c.ShouldBind(&img)

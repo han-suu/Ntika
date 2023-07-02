@@ -21,6 +21,12 @@ type CartInput struct {
 	Size       string `json:"size" binding:"required"`
 }
 
+type StockInput struct {
+	Product_ID int `json:"product_id" binding:"required"`
+	Size_ID    int `json:"size_id" binding:"required"`
+	Stock      int `json:"stock" binding:"required"`
+}
+
 // ================================================================
 type SizeInput struct {
 	Size_Name string `json:"size_name" binding:"required"`

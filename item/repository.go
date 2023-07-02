@@ -12,6 +12,8 @@ type Repository interface {
 	FindAll(filter string, sort string) ([]Item, error)
 	Create(item Item) (Item, error)
 	AddToCart(cart CartItem) (CartItem, error)
+	FindStock(product_id int, size_id int) (Product_size_stock, error)
+	UpdateStock(item_stock Product_size_stock) (Product_size_stock, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -87,6 +89,31 @@ func (r *repository) Find(item Item) (Item, error) {
 	}
 
 	return item, err
+}
+
+func (r *repository) FindStock(product_id int, size_id int) (Product_size_stock, error) {
+	var item_stock Product_size_stock
+
+	err := r.db.Where("product_id = ? AND size_id >= ?", product_id, size_id).First(&item_stock).Error
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE FB-EMAIL")
+		println("=====================")
+	}
+
+	return item_stock, err
+}
+
+func (r *repository) UpdateStock(item_stock Product_size_stock) (Product_size_stock, error) {
+	err := r.db.Save(&item_stock).Error
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE Updating")
+		println("=====================")
+	}
+	fmt.Printf("error repo %s", err)
+	fmt.Println("")
+	return item_stock, err
 }
 
 func (r *repository) Pap(img Images2) (Images2, error) {
