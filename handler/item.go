@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"ntika/auth"
 	"ntika/item"
@@ -145,6 +146,53 @@ func (h *handlerTag) UpdateStock(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"msg":   "berhasil",
 		"stock": newStock,
+	})
+}
+
+// func (h *handlerTag) GetAllItemStock(c *gin.Context) {
+
+// 	items, err := h.itemService.GetAllItemStock()
+
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"msg": err,
+// 		})
+// 		return
+// 	}
+// 	// bukus := []song.SongResponse{}
+// 	// for _, b := range songs {
+// 	// 	buku := convertToResponse(b)
+// 	// 	bukus = append(bukus, buku)
+// 	// }
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"data":   items,
+// 	})
+// }
+
+func (h *handlerTag) GetItemStock(c *gin.Context) {
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	items, err := h.itemService.GetItemStock(id)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": items,
 	})
 }
 

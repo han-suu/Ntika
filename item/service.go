@@ -16,6 +16,8 @@ type Service interface {
 	// Pap(tagInput string) (Images2, error)
 	AddSize(tagInput SizeInput) (Size, error)
 	UpdateStock(stockInput StockInput) (Product_size_stock, error)
+	// GetAllItemStock()
+	GetItemStock(ID int) ([]Product_size_stock, error)
 }
 
 type service struct {
@@ -118,6 +120,12 @@ func (s *service) UpdateStock(stockInput StockInput) (Product_size_stock, error)
 	// if err != nil {
 	// 	fmt.Println(err)
 	// }
+}
+
+func (s *service) GetItemStock(ID int) ([]Product_size_stock, error) {
+	items, err := s.repository.GetItemStock(ID)
+	return items, err
+
 }
 
 // func (s *service) Pap(itemInput Images2Input) (Images2, error) {
