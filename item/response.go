@@ -12,3 +12,11 @@ type CatResponse struct {
 	Description string `json:"description"`
 	Thumbnail   string `json:"thumbnail"`
 }
+
+type DetailResponse struct {
+	ID          int       `json:"id"`
+	Name        string    `json:"name"`
+	Price       int       `json:"price"`
+	Description string    `json:"description"`
+	Images      []Images2 `json:"images"`
+}

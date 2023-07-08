@@ -19,6 +19,8 @@ type Service interface {
 	// GetAllItemStock()
 	GetItemStock(ID int) ([]Product_size_stock, error)
 	Thumbnail(ID int) (Images2, error)
+	ItemDetail(ID int) (Item, error)
+	FindImages(ID int) ([]Images2, error)
 }
 
 type service struct {
@@ -164,10 +166,22 @@ func (s *service) AddSize(tagInput SizeInput) (Size, error) {
 	return newtag, err
 }
 
+func (s *service) ItemDetail(ID int) (Item, error) {
+	pic, err := s.repository.ItemDetail(ID)
+	return pic, err
+
+}
+
 // ============================================================
 
 func (s *service) Thumbnail(ID int) (Images2, error) {
 	pic, err := s.repository.Thumbnail(ID)
 	return pic, err
+
+}
+
+func (s *service) FindImages(ID int) ([]Images2, error) {
+	pics, err := s.repository.FindImages(ID)
+	return pics, err
 
 }

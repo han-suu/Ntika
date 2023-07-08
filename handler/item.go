@@ -90,6 +90,40 @@ func (h *handlerTag) Thumbnail(c *gin.Context) {
 	})
 }
 
+func (h *handlerTag) ItemDetail(c *gin.Context) {
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	item, err := h.itemService.ItemDetail(id)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	images, err := h.itemService.FindImages(id)
+	res := convertToResponseDetail(item, images)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": res,
+	})
+}
+
 func (h *handlerTag) Create(c *gin.Context) {
 	// var image item.Images2Input
 	var item item.ItemInput
@@ -267,11 +301,19 @@ func convertToResponseCatalog(i item.Item, t item.Images2) item.CatResponse {
 		Description: i.Description,
 		Price:       i.Price,
 		Thumbnail:   t.Based,
-		// Title:       b.Title,
-		// Price:       b.Price,
-		// Description: b.Description,
-		// Rating:      b.Rating,
-		// Discount:    b.Discount,
+	}
+	return res
+
+}
+
+func convertToResponseDetail(i item.Item, images []item.Images2) item.DetailResponse {
+
+	res := item.DetailResponse{
+		ID:          i.ID,
+		Name:        i.Name,
+		Description: i.Description,
+		Price:       i.Price,
+		Images:      images,
 	}
 	return res
 

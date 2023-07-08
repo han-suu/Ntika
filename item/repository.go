@@ -15,11 +15,13 @@ type Repository interface {
 	FindStock(product_id int, size_id int) (Product_size_stock, error)
 	UpdateStock(item_stock Product_size_stock) (Product_size_stock, error)
 	GetItemStock(ID int) ([]Product_size_stock, error)
+	ItemDetail(ID int) (Item, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
 	AddStock(size Product_size_stock) (Product_size_stock, error)
 	Thumbnail(ID int) (Images2, error)
+	FindImages(ID int) ([]Images2, error)
 }
 
 type repository struct {
@@ -146,6 +148,19 @@ func (r *repository) GetItemStock(ID int) ([]Product_size_stock, error) {
 
 }
 
+func (r *repository) ItemDetail(ID int) (Item, error) {
+	var item Item
+	err := r.db.Where(&Item{ID: ID}).First(&item).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return item, err
+}
+
 // Undirect----------------------------------------------
 func (r *repository) AddStock(stock Product_size_stock) (Product_size_stock, error) {
 
@@ -163,6 +178,19 @@ func (r *repository) AddStock(stock Product_size_stock) (Product_size_stock, err
 func (r *repository) Thumbnail(ID int) (Images2, error) {
 	var images Images2
 	err := r.db.Where(&Images2{Product_ID: ID}).First(&images).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return images, err
+}
+
+func (r *repository) FindImages(ID int) ([]Images2, error) {
+	var images []Images2
+	err := r.db.Where(&Images2{Product_ID: ID}).Find(&images).Error
 
 	if err != nil {
 		println("=====================")
