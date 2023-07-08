@@ -16,6 +16,7 @@ type Repository interface {
 	UpdateStock(item_stock Product_size_stock) (Product_size_stock, error)
 	GetItemStock(ID int) ([]Product_size_stock, error)
 	ItemDetail(ID int) (Item, error)
+	GetCart(ID int) ([]CartItem, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -159,6 +160,19 @@ func (r *repository) ItemDetail(ID int) (Item, error) {
 	}
 
 	return item, err
+}
+
+func (r *repository) GetCart(ID int) ([]CartItem, error) {
+	var items []CartItem
+	err := r.db.Where(&CartItem{User_ID: ID}).Find(&items).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return items, err
 }
 
 // Undirect----------------------------------------------

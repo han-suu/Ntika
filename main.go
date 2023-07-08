@@ -101,6 +101,7 @@ func main() {
 	// v1.DELETE("/cart/", )
 	// v1.POST("/order", )
 	v1.POST("/cart", middleware.RequireAuth, itemHandler.AddToCart)
+	v1.GET("/cart", itemHandler.GetCart)
 	// v1.GET("/user/shipping_address", )
 	// v1.GET("/shipping_price", )
 

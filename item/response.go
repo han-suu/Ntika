@@ -20,3 +20,12 @@ type DetailResponse struct {
 	Description string    `json:"description"`
 	Images      []Images2 `json:"images"`
 }
+
+type CartItemResponse struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
+	Image string `json:"image"`
+	Qty   int    `json:"qty"`
+	Size  string `json:"size"`
+}

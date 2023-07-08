@@ -21,6 +21,7 @@ type Service interface {
 	Thumbnail(ID int) (Images2, error)
 	ItemDetail(ID int) (Item, error)
 	FindImages(ID int) ([]Images2, error)
+	GetCart(user auth.User) ([]CartItem, error)
 }
 
 type service struct {
@@ -169,6 +170,12 @@ func (s *service) AddSize(tagInput SizeInput) (Size, error) {
 func (s *service) ItemDetail(ID int) (Item, error) {
 	pic, err := s.repository.ItemDetail(ID)
 	return pic, err
+
+}
+
+func (s *service) GetCart(user auth.User) ([]CartItem, error) {
+	cart, err := s.repository.GetCart(user.ID)
+	return cart, err
 
 }
 

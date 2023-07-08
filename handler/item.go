@@ -346,3 +346,49 @@ func (h *handlerTag) AddSize(c *gin.Context) {
 		"msg": "berhasil",
 	})
 }
+
+func (h *handlerTag) GetCart(c *gin.Context) {
+	user_email := Ambil(c)
+	user, err := h.userService.FindByEmail(user_email)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	cart, err := h.itemService.GetCart(user)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	responses := []item.CartItemResponse{}
+	for _, i := range cart {
+		thumb, _ := h.itemService.Thumbnail(i.Product_ID)
+		item, _ := h.itemService.ItemDetail(i.Product_ID)
+		res := convertToResponseCart(item, thumb, i)
+		responses = append(responses, res)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": responses,
+	})
+}
+
+func convertToResponseCart(i item.Item, image item.Images2, c item.CartItem) item.CartItemResponse {
+
+	res := item.CartItemResponse{
+		ID:    c.ID,
+		Name:  i.Name,
+		Price: i.Price,
+		Qty:   c.Quantity,
+		Size:  c.Size,
+		Image: image.Based,
+	}
+	return res
+
+}
