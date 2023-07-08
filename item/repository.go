@@ -19,6 +19,7 @@ type Repository interface {
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
 	AddStock(size Product_size_stock) (Product_size_stock, error)
+	Thumbnail(ID int) (Images2, error)
 }
 
 type repository struct {
@@ -157,6 +158,19 @@ func (r *repository) AddStock(stock Product_size_stock) (Product_size_stock, err
 	}
 
 	return stock, err
+}
+
+func (r *repository) Thumbnail(ID int) (Images2, error) {
+	var images Images2
+	err := r.db.Where(&Images2{Product_ID: ID}).First(&images).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return images, err
 }
 
 // DEV-Only==============================================

@@ -6,7 +6,6 @@ type ItemInput struct {
 	Category    string   `json:"category" binding:"required"`
 	Description string   `json:"description" binding:"required"`
 	Images      []string `json:"images" binding:"required"`
-	Size_Chart  string   `json:"size_chart" binding:"required"`
 	Stock       []int    `json:"stock" binding:"required"`
 }
 

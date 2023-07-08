@@ -88,6 +88,7 @@ func main() {
 
 	// ITEM
 	v1.GET("/products", itemHandler.Catalog)
+	v1.GET("/thumbnail/:id", itemHandler.Thumbnail)
 	// v1.GET("/item_stock", itemHandler.GetAllItemStock)
 	v1.GET("/item_stock/:id", itemHandler.GetItemStock)
 	v1.POST("/update-stock", middleware.RequireAuth, itemHandler.UpdateStock)

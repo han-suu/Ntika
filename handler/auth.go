@@ -98,7 +98,8 @@ func (h *handler) SignIn(c *gin.Context) {
 		c.SetSameSite(http.SameSiteLaxMode)
 		c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
 		c.JSON(http.StatusOK, gin.H{
-			"msg": msg,
+			"msg":   msg,
+			"token": tokenString,
 		})
 	}
 
@@ -135,11 +136,25 @@ func (h *handler) UserProfile(c *gin.Context) {
 	// 	})
 	// 	return
 	// }
+	user_email := Ambil(c)
+	user, err := h.userService.FindByEmail(user_email)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
 
-	user, _ := c.Get("user")
+	u := convertToResponse(user)
 	c.JSON(http.StatusOK, gin.H{
-		"You": user,
+		"data": u,
 	})
+
+	// user, _ := c.Get("user")
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"You": user,
+	// })
 }
 
 func (h *handler) UpdateAddress(c *gin.Context) {
@@ -216,4 +231,21 @@ func Ambil(c *gin.Context) string {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 	return "x"
+}
+
+func convertToResponse(b auth.User) auth.UserResponse {
+
+	user := auth.UserResponse{
+		UserName: b.Name,
+		Email:    b.Email,
+		Phone:    b.Phone,
+		Address:  b.Address,
+		// Title:       b.Title,
+		// Price:       b.Price,
+		// Description: b.Description,
+		// Rating:      b.Rating,
+		// Discount:    b.Discount,
+	}
+	return user
+
 }

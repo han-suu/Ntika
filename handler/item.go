@@ -39,15 +39,54 @@ func (h *handlerTag) Catalog(c *gin.Context) {
 		})
 		return
 	}
+
+	responses := []item.CatResponse{}
+	for _, i := range items {
+		thumb, _ := h.itemService.Thumbnail(i.ID)
+		res := convertToResponseCatalog(i, thumb)
+		responses = append(responses, res)
+	}
+
 	// bukus := []song.SongResponse{}
 	// for _, b := range songs {
 	// 	buku := convertToResponse(b)
 	// 	bukus = append(bukus, buku)
 	// }
 	c.JSON(http.StatusOK, gin.H{
-		"data":   items,
+		"data":   responses,
 		"Filter": filter,
 		"Sort":   sort,
+	})
+}
+
+func (h *handlerTag) Thumbnail(c *gin.Context) {
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	pic, err := h.itemService.Thumbnail(id)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	// bukus := []song.SongResponse{}
+	// for _, b := range songs {
+	// 	buku := convertToResponse(b)
+	// 	bukus = append(bukus, buku)
+	// }
+	c.JSON(http.StatusOK, gin.H{
+		"data": pic.Based,
 	})
 }
 
@@ -220,20 +259,23 @@ func (h *handlerTag) GetItemStock(c *gin.Context) {
 // 	})
 // }
 
-// // func convertToResponseTag(b song.Song) song.SongResponse {
+func convertToResponseCatalog(i item.Item, t item.Images2) item.CatResponse {
 
-// // 	buku := song.SongResponse{
-// // 		ID:   b.ID,
-// // 		YtID: b.YtID,
-// // 		// Title:       b.Title,
-// // 		// Price:       b.Price,
-// // 		// Description: b.Description,
-// // 		// Rating:      b.Rating,
-// // 		// Discount:    b.Discount,
-// // 	}
-// // 	return buku
+	res := item.CatResponse{
+		ID:          i.ID,
+		Name:        i.Name,
+		Description: i.Description,
+		Price:       i.Price,
+		Thumbnail:   t.Based,
+		// Title:       b.Title,
+		// Price:       b.Price,
+		// Description: b.Description,
+		// Rating:      b.Rating,
+		// Discount:    b.Discount,
+	}
+	return res
 
-// // }
+}
 
 func (h *handlerTag) AddSize(c *gin.Context) {
 	// var image item.Images2Input

@@ -8,7 +8,6 @@ type Item struct {
 	Category    string
 	Price       int
 	Description string
-	Size_Chart  string
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
