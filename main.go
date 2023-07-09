@@ -82,7 +82,7 @@ func main() {
 
 	// USER
 	v1.GET("/user", middleware.RequireAuth, userHandler.UserProfile)
-	v1.POST("/change_address", middleware.RequireAuth, userHandler.UpdateAddress)
+	v1.PUT("/change_address", middleware.RequireAuth, userHandler.UpdateAddress)
 	// v1.GET("/user/order", middleware.RequireAuth, itemHandler.)
 	// v1.GET("/change_name", middleware.RequireAuth, itemHandler.)
 

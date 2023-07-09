@@ -54,8 +54,16 @@ func (s *service) UpdateAddress(addressInput AddressInput, user_email string) (U
 	if err != nil {
 		fmt.Println(err)
 	}
-	user.City = addressInput.City
-	user.Address = addressInput.Address
+
+	if addressInput.Name != "" {
+		user.Name = addressInput.Name
+	}
+	if addressInput.Phone != "" {
+		user.Phone = addressInput.Phone
+	}
+	if addressInput.Address != "" {
+		user.Address = addressInput.Address
+	}
 
 	newaddress, err := s.repository.UpdateAddress(user)
 	return newaddress, err

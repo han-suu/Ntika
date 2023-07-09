@@ -13,6 +13,7 @@ type SignIn struct {
 }
 
 type AddressInput struct {
-	Address string `json:"address" binding:"required"`
-	City    string `json:"city" binding:"required"`
+	Name    string `json:"name"`
+	Phone   string `json:"phone"`
+	Address string `json:"address"`
 }
