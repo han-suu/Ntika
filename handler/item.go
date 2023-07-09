@@ -392,3 +392,31 @@ func convertToResponseCart(i item.Item, image item.Images2, c item.CartItem) ite
 	return res
 
 }
+
+func (h *handlerTag) DeleteCart(c *gin.Context) {
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	_, err = h.itemService.DeleteCart(id)
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	// msg := fmt.Sprintf("buku %s dengan id %d berhasil didelete", item.Title, buku.ID)
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "Berhasil Delete",
+	})
+}

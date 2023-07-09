@@ -17,6 +17,8 @@ type Repository interface {
 	GetItemStock(ID int) ([]Product_size_stock, error)
 	ItemDetail(ID int) (Item, error)
 	GetCart(ID int) ([]CartItem, error)
+	FindCartItem(ID int) (CartItem, error)
+	DeleteCart(item CartItem) (CartItem, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -213,6 +215,32 @@ func (r *repository) FindImages(ID int) ([]Images2, error) {
 	}
 
 	return images, err
+}
+
+func (r *repository) FindCartItem(ID int) (CartItem, error) {
+	var item CartItem
+	err := r.db.Where(&CartItem{ID: ID}).First(&item).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return item, err
+}
+
+func (r *repository) DeleteCart(item CartItem) (CartItem, error) {
+
+	err := r.db.Delete(&item).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE Updating")
+		println("=====================")
+	}
+
+	return item, err
 }
 
 // DEV-Only==============================================

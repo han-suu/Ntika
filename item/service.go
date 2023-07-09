@@ -22,6 +22,7 @@ type Service interface {
 	ItemDetail(ID int) (Item, error)
 	FindImages(ID int) ([]Images2, error)
 	GetCart(user auth.User) ([]CartItem, error)
+	DeleteCart(id int) (CartItem, error)
 }
 
 type service struct {
@@ -177,6 +178,17 @@ func (s *service) GetCart(user auth.User) ([]CartItem, error) {
 	cart, err := s.repository.GetCart(user.ID)
 	return cart, err
 
+}
+
+func (s *service) DeleteCart(id int) (CartItem, error) {
+	item, err := s.repository.FindCartItem(id)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	deleteItem, err := s.repository.DeleteCart(item)
+
+	return deleteItem, err
 }
 
 // ============================================================

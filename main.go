@@ -98,7 +98,7 @@ func main() {
 
 	// ORDER
 	// v1.GET("/cart", itemHandler.Catalog)
-	// v1.DELETE("/cart/", )
+	v1.DELETE("/cart/:id", middleware.RequireAuth, itemHandler.DeleteCart)
 	// v1.POST("/order", )
 	v1.POST("/cart", middleware.RequireAuth, itemHandler.AddToCart)
 	v1.GET("/cart", itemHandler.GetCart)
