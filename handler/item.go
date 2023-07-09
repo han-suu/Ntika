@@ -420,3 +420,62 @@ func (h *handlerTag) DeleteCart(c *gin.Context) {
 		"msg": "Berhasil Delete",
 	})
 }
+
+func (h *handlerTag) Order(c *gin.Context) {
+	// var image item.Images2Input
+	var orderi item.OrderInput
+	err := c.ShouldBind(&orderi)
+	if err != nil {
+
+		messages := []string{}
+
+		for _, e := range err.(validator.ValidationErrors) {
+			errormsg := fmt.Sprintf("Error pada field %s, condition %s", e.Field(), e.ActualTag())
+			messages = append(messages, errormsg)
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": messages,
+		})
+		return
+	}
+	user_email := Ambil(c)
+	user, err := h.userService.FindByEmail(user_email)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	order, err := h.itemService.Order(user.ID, orderi)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	cart, err := h.itemService.GetCart(user)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	for _, i := range cart {
+		_, err := h.itemService.CreateOrderItem(i, order.ID)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"msg": err,
+			})
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "berhasil",
+	})
+}

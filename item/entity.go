@@ -27,7 +27,6 @@ type CartItem struct {
 type Orders struct {
 	ID              int
 	User_ID         int
-	Product_ID      int
 	Sub_Total       int
 	Shipping_Method string
 	Shipping_Fee    int
@@ -35,6 +34,8 @@ type Orders struct {
 	Address         string
 	City            string
 	Status          string
+	StartDate       time.Time
+	EndDate         time.Time
 	Durasi          int
 
 	CreatedAt time.Time

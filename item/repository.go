@@ -19,6 +19,8 @@ type Repository interface {
 	GetCart(ID int) ([]CartItem, error)
 	FindCartItem(ID int) (CartItem, error)
 	DeleteCart(item CartItem) (CartItem, error)
+	Order(order Orders) (Orders, error)
+	CreateOrderItem(item OrderItem) (OrderItem, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -237,6 +239,31 @@ func (r *repository) DeleteCart(item CartItem) (CartItem, error) {
 	if err != nil {
 		println("=====================")
 		println("ERROR WHILE Updating")
+		println("=====================")
+	}
+
+	return item, err
+}
+
+func (r *repository) Order(order Orders) (Orders, error) {
+
+	err := r.db.Create(&order).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return order, err
+}
+func (r *repository) CreateOrderItem(item OrderItem) (OrderItem, error) {
+
+	err := r.db.Create(&item).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
 		println("=====================")
 	}
 

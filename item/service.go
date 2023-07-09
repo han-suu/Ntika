@@ -23,6 +23,8 @@ type Service interface {
 	FindImages(ID int) ([]Images2, error)
 	GetCart(user auth.User) ([]CartItem, error)
 	DeleteCart(id int) (CartItem, error)
+	Order(ID int, orderInput OrderInput) (Orders, error)
+	CreateOrderItem(item CartItem, ID int) (OrderItem, error)
 }
 
 type service struct {
@@ -189,6 +191,47 @@ func (s *service) DeleteCart(id int) (CartItem, error) {
 	deleteItem, err := s.repository.DeleteCart(item)
 
 	return deleteItem, err
+}
+
+func (s *service) Order(ID int, orderInput OrderInput) (Orders, error) {
+
+	// ADD ITEM
+	order := Orders{
+		User_ID:         ID,
+		Sub_Total:       orderInput.Sub_Total,
+		Shipping_Method: orderInput.Shipping_Method,
+		Shipping_Fee:    orderInput.Shipping_Fee,
+		Total_Price:     orderInput.Total_Price,
+		Address:         orderInput.Address,
+		Status:          "Menunggu Konfirmasi Admin",
+		StartDate:       orderInput.StartDate,
+		EndDate:         orderInput.EndDate,
+		Durasi:          orderInput.Durasi,
+	}
+	neworder, err := s.repository.Order(order)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return neworder, err
+}
+
+func (s *service) CreateOrderItem(item CartItem, ID int) (OrderItem, error) {
+
+	// ADD ITEM
+	orderitem := OrderItem{
+		Order_ID:   ID,
+		Product_ID: item.Product_ID,
+		Quantity:   item.Quantity,
+		Size:       item.Size,
+	}
+	neworderitem, err := s.repository.CreateOrderItem(orderitem)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return neworderitem, err
 }
 
 // ============================================================

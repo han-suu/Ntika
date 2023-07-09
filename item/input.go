@@ -1,5 +1,7 @@
 package item
 
+import "time"
+
 type ItemInput struct {
 	Name        string   `json:"name" binding:"required"`
 	Price       int      `json:"price" binding:"required"`
@@ -24,6 +26,17 @@ type StockInput struct {
 	Product_ID int `json:"product_id" binding:"required"`
 	Size_ID    int `json:"size_id" binding:"required"`
 	Stock      int `json:"stock" binding:"required"`
+}
+
+type OrderInput struct {
+	Sub_Total       int       `json:"sub_total" binding:"required"`
+	Total_Price     int       `json:"total_price" binding:"required"`
+	Shipping_Method string    `json:"shipping_method" binding:"required"`
+	Shipping_Fee    int       `json:"shipping_fee" binding:"required"`
+	Address         string    `json:"address" binding:"required"`
+	StartDate       time.Time `json:"start_date" binding:"required"`
+	EndDate         time.Time `json:"end_date" binding:"required"`
+	Durasi          int       `json:"durasi" binding:"required"`
 }
 
 // ================================================================
