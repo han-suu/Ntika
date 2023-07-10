@@ -475,6 +475,17 @@ func (h *handlerTag) Order(c *gin.Context) {
 		}
 	}
 
+	for _, i := range cart {
+		_, err := h.itemService.DeleteCart(i.ID)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"msg": err,
+			})
+			return
+		}
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"msg": "berhasil",
 	})
