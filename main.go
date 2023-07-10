@@ -74,6 +74,7 @@ func main() {
 	// ADMIN
 	v1.POST("/item", itemHandler.Create)
 	v1.GET("/admin/order", middleware.RequireAuth, itemHandler.AdminOrder)
+	v1.PUT("/admin/konfirmasi/:id", middleware.RequireAuth, itemHandler.AdminACC)
 	// v1.GET("/admin/items", itemHandler.)
 	// v1.DELETE("/products", itemHandler.)
 	// v1.PUT("/item", itemHandler.)

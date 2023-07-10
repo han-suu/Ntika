@@ -29,6 +29,7 @@ type Service interface {
 	UserHistory(user auth.User) ([]Orders, error)
 	GetOrderItem(order Orders) ([]OrderItem, error)
 	AdminOrder() ([]Orders, error)
+	AdminACC(ID int) (Orders, error)
 }
 
 type service struct {
@@ -262,6 +263,20 @@ func (s *service) GetOrderItem(order Orders) ([]OrderItem, error) {
 
 func (s *service) AdminOrder() ([]Orders, error) {
 	orders, err := s.repository.AdminOrder()
+	return orders, err
+
+}
+
+func (s *service) AdminACC(ID int) (Orders, error) {
+	order, err := s.repository.GetOrder(ID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	order.Status = "Yay! Sudah di ACC Admin"
+	orders, err := s.repository.AdminACC(order)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return orders, err
 
 }

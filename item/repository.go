@@ -24,6 +24,8 @@ type Repository interface {
 	UserHistory(ID int) ([]Orders, error)
 	// -----------------------------------
 	AdminOrder() ([]Orders, error)
+	GetOrder(ID int) (Orders, error)
+	AdminACC(order Orders) (Orders, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -313,6 +315,29 @@ func (r *repository) AdminOrder() ([]Orders, error) {
 
 	return orders, err
 
+}
+
+func (r *repository) GetOrder(ID int) (Orders, error) {
+	var orders Orders
+	err := r.db.Where(&Orders{ID: ID}).First(&orders).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return orders, err
+}
+
+func (r *repository) AdminACC(order Orders) (Orders, error) {
+	err := r.db.Save(&order).Error
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE Updating")
+		println("=====================")
+	}
+	return order, err
 }
 
 // DEV-Only==============================================
