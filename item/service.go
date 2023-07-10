@@ -3,6 +3,7 @@ package item
 import (
 	"fmt"
 	"ntika/auth"
+	"time"
 )
 
 // import "fmt"
@@ -195,6 +196,16 @@ func (s *service) DeleteCart(id int) (CartItem, error) {
 
 func (s *service) Order(ID int, orderInput OrderInput) (Orders, error) {
 
+	start := orderInput.StartDate
+	startdate, error := time.Parse("2006-01-02", start)
+	if error != nil {
+		fmt.Println(error)
+	}
+	end := orderInput.EndDate
+	enddate, error := time.Parse("2006-01-02", end)
+	if error != nil {
+		fmt.Println(error)
+	}
 	// ADD ITEM
 	order := Orders{
 		User_ID:         ID,
@@ -204,8 +215,8 @@ func (s *service) Order(ID int, orderInput OrderInput) (Orders, error) {
 		Total_Price:     orderInput.Total_Price,
 		Address:         orderInput.Address,
 		Status:          "Menunggu Konfirmasi Admin",
-		StartDate:       orderInput.StartDate,
-		EndDate:         orderInput.EndDate,
+		StartDate:       startdate,
+		EndDate:         enddate,
 		Durasi:          orderInput.Durasi,
 	}
 	neworder, err := s.repository.Order(order)
