@@ -28,6 +28,7 @@ type Service interface {
 	CreateOrderItem(item CartItem, ID int) (OrderItem, error)
 	UserHistory(user auth.User) ([]Orders, error)
 	GetOrderItem(order Orders) ([]OrderItem, error)
+	AdminOrder() ([]Orders, error)
 }
 
 type service struct {
@@ -256,6 +257,12 @@ func (s *service) UserHistory(user auth.User) ([]Orders, error) {
 func (s *service) GetOrderItem(order Orders) ([]OrderItem, error) {
 	cart, err := s.repository.GetOrderItem(order.ID)
 	return cart, err
+
+}
+
+func (s *service) AdminOrder() ([]Orders, error) {
+	orders, err := s.repository.AdminOrder()
+	return orders, err
 
 }
 

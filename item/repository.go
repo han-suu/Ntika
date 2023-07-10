@@ -22,6 +22,8 @@ type Repository interface {
 	Order(order Orders) (Orders, error)
 	CreateOrderItem(item OrderItem) (OrderItem, error)
 	UserHistory(ID int) ([]Orders, error)
+	// -----------------------------------
+	AdminOrder() ([]Orders, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -296,6 +298,21 @@ func (r *repository) GetOrderItem(ID int) ([]OrderItem, error) {
 	}
 
 	return items, err
+}
+
+func (r *repository) AdminOrder() ([]Orders, error) {
+	var orders []Orders
+	base := r.db.Debug()
+
+	err := base.Find(&orders).Error // Query your results
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE F")
+		println("=====================")
+	}
+
+	return orders, err
+
 }
 
 // DEV-Only==============================================

@@ -559,3 +559,44 @@ func convertToResponseHistory(o item.Orders, oi []item.OrderItemResponse) item.H
 	return res
 
 }
+
+func (h *handlerTag) AdminOrder(c *gin.Context) {
+	// user_email := Ambil(c)
+	// user, err := h.userService.FindByEmail(user_email)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"msg": err,
+	// 	})
+	// 	return
+	// }
+	orders, err := h.itemService.AdminOrder()
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	// responses := []item.HistoryResponse{}
+	// responses_oi := []item.OrderItemResponse{}
+	// for _, i := range orders {
+	// 	orderitems, _ := h.itemService.GetOrderItem(i)
+
+	// 	for _, j := range orderitems {
+	// 		thumb, _ := h.itemService.Thumbnail(j.Product_ID)
+
+	// 		res1 := convertToResponseOrderItem(thumb, j)
+	// 		responses_oi = append(responses_oi, res1)
+	// 	}
+
+	// 	res := convertToResponseHistory(i, responses_oi)
+	// 	responses = append(responses, res)
+	// 	responses_oi = []item.OrderItemResponse{}
+	// }
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": orders,
+	})
+}
