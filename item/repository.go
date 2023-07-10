@@ -21,12 +21,14 @@ type Repository interface {
 	DeleteCart(item CartItem) (CartItem, error)
 	Order(order Orders) (Orders, error)
 	CreateOrderItem(item OrderItem) (OrderItem, error)
+	UserHistory(ID int) ([]Orders, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
 	AddStock(size Product_size_stock) (Product_size_stock, error)
 	Thumbnail(ID int) (Images2, error)
 	FindImages(ID int) ([]Images2, error)
+	GetOrderItem(ID int) ([]OrderItem, error)
 }
 
 type repository struct {
@@ -268,6 +270,32 @@ func (r *repository) CreateOrderItem(item OrderItem) (OrderItem, error) {
 	}
 
 	return item, err
+}
+
+func (r *repository) UserHistory(ID int) ([]Orders, error) {
+	var orders []Orders
+	err := r.db.Where(&Orders{User_ID: ID}).Find(&orders).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return orders, err
+}
+
+func (r *repository) GetOrderItem(ID int) ([]OrderItem, error) {
+	var items []OrderItem
+	err := r.db.Where(&OrderItem{Order_ID: ID}).Find(&items).Error
+
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE CREATING")
+		println("=====================")
+	}
+
+	return items, err
 }
 
 // DEV-Only==============================================

@@ -26,6 +26,8 @@ type Service interface {
 	DeleteCart(id int) (CartItem, error)
 	Order(ID int, orderInput OrderInput) (Orders, error)
 	CreateOrderItem(item CartItem, ID int) (OrderItem, error)
+	UserHistory(user auth.User) ([]Orders, error)
+	GetOrderItem(order Orders) ([]OrderItem, error)
 }
 
 type service struct {
@@ -243,6 +245,18 @@ func (s *service) CreateOrderItem(item CartItem, ID int) (OrderItem, error) {
 	}
 
 	return neworderitem, err
+}
+
+func (s *service) UserHistory(user auth.User) ([]Orders, error) {
+	orders, err := s.repository.UserHistory(user.ID)
+	return orders, err
+
+}
+
+func (s *service) GetOrderItem(order Orders) ([]OrderItem, error) {
+	cart, err := s.repository.GetOrderItem(order.ID)
+	return cart, err
+
 }
 
 // ============================================================

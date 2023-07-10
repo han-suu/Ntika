@@ -29,3 +29,20 @@ type CartItemResponse struct {
 	Qty   int    `json:"qty"`
 	Size  string `json:"size"`
 }
+
+type OrderItemResponse struct {
+	ID       int    `json:"id"`
+	Quantity int    `json:"qty"`
+	Size     string `json:"size"`
+	Image    string `json:"image"`
+}
+
+type HistoryResponse struct {
+	ID              int                 `json:"id"`
+	Shipping_Method string              `json:"shipping_method"`
+	Total           int                 `json:"total"`
+	Start           string              `json:"start"`
+	End             string              `json:"end"`
+	Status          string              `json:"status"`
+	Items           []OrderItemResponse `json:"items"`
+}

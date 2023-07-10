@@ -490,3 +490,72 @@ func (h *handlerTag) Order(c *gin.Context) {
 		"msg": "berhasil",
 	})
 }
+
+func (h *handlerTag) UserHistory(c *gin.Context) {
+	user_email := Ambil(c)
+	user, err := h.userService.FindByEmail(user_email)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	orders, err := h.itemService.UserHistory(user)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+
+	responses := []item.HistoryResponse{}
+	responses_oi := []item.OrderItemResponse{}
+	for _, i := range orders {
+		orderitems, _ := h.itemService.GetOrderItem(i)
+
+		for _, j := range orderitems {
+			thumb, _ := h.itemService.Thumbnail(j.Product_ID)
+
+			res1 := convertToResponseOrderItem(thumb, j)
+			responses_oi = append(responses_oi, res1)
+		}
+
+		res := convertToResponseHistory(i, responses_oi)
+		responses = append(responses, res)
+		responses_oi = []item.OrderItemResponse{}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": responses,
+	})
+}
+
+func convertToResponseOrderItem(img item.Images2, oi item.OrderItem) item.OrderItemResponse {
+	res := item.OrderItemResponse{
+		ID:       oi.ID,
+		Quantity: oi.Quantity,
+		Size:     oi.Size,
+		Image:    img.Based,
+	}
+	return res
+
+}
+
+func convertToResponseHistory(o item.Orders, oi []item.OrderItemResponse) item.HistoryResponse {
+	start := o.StartDate.Format("2006-01-02")
+	end := o.EndDate.Format("2006-01-02")
+
+	res := item.HistoryResponse{
+		ID:              o.ID,
+		Shipping_Method: o.Shipping_Method,
+		Total:           o.Total_Price,
+		Start:           start,
+		End:             end,
+		Status:          o.Status,
+		Items:           oi,
+	}
+	return res
+
+}
