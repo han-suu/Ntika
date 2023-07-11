@@ -25,7 +25,7 @@ type Repository interface {
 	// -----------------------------------
 	AdminOrder() ([]Orders, error)
 	GetOrder(ID int) (Orders, error)
-	AdminACC(order Orders) (Orders, error)
+	AdminUpdateOrder(order Orders) (Orders, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -330,7 +330,7 @@ func (r *repository) GetOrder(ID int) (Orders, error) {
 	return orders, err
 }
 
-func (r *repository) AdminACC(order Orders) (Orders, error) {
+func (r *repository) AdminUpdateOrder(order Orders) (Orders, error) {
 	err := r.db.Save(&order).Error
 	if err != nil {
 		println("=====================")
