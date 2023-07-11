@@ -517,8 +517,8 @@ func (h *handlerTag) UserHistory(c *gin.Context) {
 
 		for _, j := range orderitems {
 			thumb, _ := h.itemService.Thumbnail(j.Product_ID)
-
-			res1 := convertToResponseOrderItem(thumb, j)
+			item, _ := h.itemService.ItemDetail(j.Product_ID)
+			res1 := convertToResponseOrderItem(thumb, j, item)
 			responses_oi = append(responses_oi, res1)
 		}
 
@@ -532,9 +532,10 @@ func (h *handlerTag) UserHistory(c *gin.Context) {
 	})
 }
 
-func convertToResponseOrderItem(img item.Images2, oi item.OrderItem) item.OrderItemResponse {
+func convertToResponseOrderItem(img item.Images2, oi item.OrderItem, i item.Item) item.OrderItemResponse {
 	res := item.OrderItemResponse{
 		ID:       oi.ID,
+		Name:     i.Name,
 		Quantity: oi.Quantity,
 		Size:     oi.Size,
 		Image:    img.Based,

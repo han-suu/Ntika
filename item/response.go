@@ -32,6 +32,7 @@ type CartItemResponse struct {
 
 type OrderItemResponse struct {
 	ID       int    `json:"id"`
+	Name     string `json:"name"`
 	Quantity int    `json:"qty"`
 	Size     string `json:"size"`
 	Image    string `json:"image"`
