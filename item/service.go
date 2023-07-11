@@ -30,6 +30,8 @@ type Service interface {
 	GetOrderItem(order Orders) ([]OrderItem, error)
 	AdminOrder() ([]Orders, error)
 	AdminACC(ID int) (Orders, error)
+	AdminCancel(ID int) (Orders, error)
+	AdminFin(ID int) (Orders, error)
 }
 
 type service struct {
@@ -218,7 +220,7 @@ func (s *service) Order(ID int, orderInput OrderInput) (Orders, error) {
 		Shipping_Fee:    orderInput.Shipping_Fee,
 		Total_Price:     orderInput.Total_Price,
 		Address:         orderInput.Address,
-		Status:          "Menunggu Konfirmasi Admin",
+		Status:          "Diproses",
 		StartDate:       startdate,
 		EndDate:         enddate,
 		Durasi:          orderInput.Durasi,
@@ -272,8 +274,36 @@ func (s *service) AdminACC(ID int) (Orders, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	order.Status = "Yay! Sudah di ACC Admin"
-	orders, err := s.repository.AdminACC(order)
+	order.Status = "Diterima"
+	orders, err := s.repository.AdminUpdateOrder(order)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return orders, err
+
+}
+
+func (s *service) AdminCancel(ID int) (Orders, error) {
+	order, err := s.repository.GetOrder(ID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	order.Status = "Ditolak"
+	orders, err := s.repository.AdminUpdateOrder(order)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return orders, err
+
+}
+
+func (s *service) AdminFin(ID int) (Orders, error) {
+	order, err := s.repository.GetOrder(ID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	order.Status = "Selesai"
+	orders, err := s.repository.AdminUpdateOrder(order)
 	if err != nil {
 		fmt.Println(err)
 	}

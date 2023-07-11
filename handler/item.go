@@ -578,28 +578,12 @@ func (h *handlerTag) AdminOrder(c *gin.Context) {
 func (h *handlerTag) AdminACC(c *gin.Context) {
 	idString := c.Param("id")
 	id, err := strconv.Atoi(idString)
-	// user_email := Ambil(c)
-	// fmt.Println("NIH:")
-	// fmt.Println(user_email)
-
-	// var address auth.AddressInput
-
-	// err := c.ShouldBind(&address)
-	// if err != nil {
-
-	// 	messages := []string{}
-
-	// 	for _, e := range err.(validator.ValidationErrors) {
-	// 		errormsg := fmt.Sprintf("Error pada field %s, condition %s", e.Field(), e.ActualTag())
-	// 		messages = append(messages, errormsg)
-	// 	}
-	// 	c.JSON(http.StatusBadRequest, gin.H{
-	// 		"msg": messages,
-	// 	})
-	// 	return
-
-	// }
-
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Cancel",
+			"err": err,
+		})
+	}
 	_, err = h.itemService.AdminACC(id)
 
 	if err != nil {
@@ -610,6 +594,52 @@ func (h *handlerTag) AdminACC(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
 			"msgs": "ACC Berhasil",
+		})
+	}
+}
+
+func (h *handlerTag) AdminCancel(c *gin.Context) {
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Cancel",
+			"err": err,
+		})
+	}
+	_, err = h.itemService.AdminCancel(id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Cancel",
+			"err": err,
+		})
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"msgs": "Cancel Berhasil",
+		})
+	}
+}
+
+func (h *handlerTag) AdminFin(c *gin.Context) {
+	idString := c.Param("id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Cancel",
+			"err": err,
+		})
+	}
+	_, err = h.itemService.AdminFin(id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Fin",
+			"err": err,
+		})
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"msgs": "Fin Berhasil",
 		})
 	}
 }
