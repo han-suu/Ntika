@@ -360,17 +360,17 @@ func (r *repository) CountSell(ID int) (int64, error) {
 }
 
 func (r *repository) NewArr() ([]Item, error) {
-	var items []Item
+	var item []Item
 	base := r.db.Debug()
-
-	err := base.First(&items).Error // Query your results
+	base = base.Order("created_at desc")
+	err := base.Find(&item).Error // Query your results
 	if err != nil {
 		println("=====================")
 		println("ERROR WHILE F")
 		println("=====================")
 	}
 
-	return items, err
+	return item, err
 
 }
 

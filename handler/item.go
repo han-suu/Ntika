@@ -780,6 +780,11 @@ func (h *handlerTag) NewArr(c *gin.Context) {
 
 	// best, err := h.itemService.BestSeller()
 	newarr, err := h.itemService.NewArr()
+	new := []item.Item{}
+
+	for i := 0; i < 2; i++ {
+		new = append(new, newarr[i])
+	}
 
 	if err != nil {
 		fmt.Println(err)
@@ -789,7 +794,7 @@ func (h *handlerTag) NewArr(c *gin.Context) {
 		return
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
-			"data": newarr,
+			"data": new,
 		})
 	}
 }
