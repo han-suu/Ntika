@@ -47,3 +47,8 @@ type HistoryResponse struct {
 	Status          string              `json:"status"`
 	Items           []OrderItemResponse `json:"items"`
 }
+
+type BestRes struct {
+	ID   int   `json:"id"`
+	Sale int64 `json:"sales"`
+}

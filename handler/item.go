@@ -719,42 +719,77 @@ func (h *handlerTag) AdminFin(c *gin.Context) {
 	}
 }
 
-// func (h *handlerTag) BestSeller(c *gin.Context) {
-// 	// filter := c.Query("filter")
-// 	// sort := c.Query("sort")
+func (h *handlerTag) BestSeller(c *gin.Context) {
+	// filter := c.Query("filter")
+	// sort := c.Query("sort")
+	items, err := h.itemService.FindAll("", "")
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	// responses := []item.CatResponse{}
+	responses := []item.BestRes{}
+	for _, i := range items {
+		best, _ := h.itemService.CountSell(i.ID)
+		res := convertToResponseBest(i.ID, best)
+		// res := best
+		responses = append(responses, res)
+	}
 
-// 	best, err := h.itemService.BestSeller()
-// 	// newarr, err := h.itemService.NewArr()
+	terbaik := item.BestRes{}
+	for _, i := range responses {
+		// best, _ := h.itemService.CountSell(i.ID)
+		// res := convertToResponseBest(i.ID, best)
+		// res := best
+		if i.Sale > terbaik.Sale {
+			terbaik = i
+		}
+		// responses = append(responses, res)
+	}
 
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"msg": err,
-// 		})
-// 		return
-// 	} else {
-// 		c.JSON(http.StatusCreated, gin.H{
-// 			"data": best,
-// 		})
-// 	}
-// }
+	// newarr, err := h.itemService.NewArr()
+	bez, err := h.itemService.ItemDetail(terbaik.ID)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"data": responses,
+			"atas": terbaik,
+			"best": bez,
+		})
+	}
+}
+func convertToResponseBest(id int, sales int64) item.BestRes {
+	res := item.BestRes{
+		ID:   id,
+		Sale: sales,
+	}
+	return res
 
-// func (h *handlerTag) NewArr(c *gin.Context) {
-// 	// filter := c.Query("filter")
-// 	// sort := c.Query("sort")
+}
+func (h *handlerTag) NewArr(c *gin.Context) {
+	// filter := c.Query("filter")
+	// sort := c.Query("sort")
 
-// 	// best, err := h.itemService.BestSeller()
-// 	newarr, err := h.itemService.NewArr()
+	// best, err := h.itemService.BestSeller()
+	newarr, err := h.itemService.NewArr()
 
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"msg": err,
-// 		})
-// 		return
-// 	} else {
-// 		c.JSON(http.StatusCreated, gin.H{
-// 			"data": newarr,
-// 		})
-// 	}
-// }
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"data": newarr,
+		})
+	}
+}

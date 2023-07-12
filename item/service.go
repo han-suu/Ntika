@@ -32,8 +32,8 @@ type Service interface {
 	AdminACC(ID int) (Orders, error)
 	AdminCancel(ID int) (Orders, error)
 	AdminFin(ID int) (Orders, error)
-	BestSeller() ([]Item, error)
-	NewArr() (Item, error)
+	CountSell(ID int) (int64, error)
+	NewArr() ([]Item, error)
 	MinStock(stockInput StockInput) (Product_size_stock, error)
 }
 
@@ -327,23 +327,23 @@ func (s *service) AdminFin(ID int) (Orders, error) {
 
 }
 
-func (s *service) BestSeller() ([]Item, error) {
-	items, err := s.repository.BestSeller()
+func (s *service) CountSell(ID int) (int64, error) {
+	count, err := s.repository.CountSell(ID)
 
+	if err != nil {
+		fmt.Println(err)
+	}
+	return count, err
+
+}
+
+func (s *service) NewArr() ([]Item, error) {
+
+	items, err := s.repository.NewArr()
 	if err != nil {
 		fmt.Println(err)
 	}
 	return items, err
-
-}
-
-func (s *service) NewArr() (Item, error) {
-
-	item, err := s.repository.NewArr()
-	if err != nil {
-		fmt.Println(err)
-	}
-	return item, err
 
 }
 

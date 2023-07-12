@@ -22,8 +22,8 @@ type Repository interface {
 	Order(order Orders) (Orders, error)
 	CreateOrderItem(item OrderItem) (OrderItem, error)
 	UserHistory(ID int) ([]Orders, error)
-	BestSeller() ([]Item, error)
-	NewArr() (Item, error)
+	CountSell(ID int) (int64, error)
+	NewArr() ([]Item, error)
 	// -----------------------------------
 	AdminOrder() ([]Orders, error)
 	GetOrder(ID int) (Orders, error)
@@ -342,33 +342,35 @@ func (r *repository) AdminUpdateOrder(order Orders) (Orders, error) {
 	return order, err
 }
 
-func (r *repository) BestSeller() ([]Item, error) {
-	var item []Item
+func (r *repository) CountSell(ID int) (int64, error) {
+	// var item []Item
 	base := r.db.Debug()
-
-	err := base.Find(&item).Error // Query your results
+	var count int64
+	// err := base.Find(&item).Error // Query your results
+	err := base.Model(&OrderItem{}).Where(&OrderItem{Product_ID: ID}).Count(&count).Error
+	fmt.Println(count)
 	if err != nil {
 		println("=====================")
 		println("ERROR WHILE F")
 		println("=====================")
 	}
 
-	return item, err
+	return count, err
 
 }
 
-func (r *repository) NewArr() (Item, error) {
-	var item Item
+func (r *repository) NewArr() ([]Item, error) {
+	var items []Item
 	base := r.db.Debug()
 
-	err := base.First(&item).Error // Query your results
+	err := base.First(&items).Error // Query your results
 	if err != nil {
 		println("=====================")
 		println("ERROR WHILE F")
 		println("=====================")
 	}
 
-	return item, err
+	return items, err
 
 }
 
