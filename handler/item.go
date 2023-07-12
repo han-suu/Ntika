@@ -752,6 +752,8 @@ func (h *handlerTag) BestSeller(c *gin.Context) {
 
 	// newarr, err := h.itemService.NewArr()
 	bez, err := h.itemService.ItemDetail(terbaik.ID)
+	thumb, _ := h.itemService.Thumbnail(bez.ID)
+	best_final := convertToResponseCatalog(bez, thumb)
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -760,9 +762,10 @@ func (h *handlerTag) BestSeller(c *gin.Context) {
 		return
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
-			"data": responses,
-			"atas": terbaik,
-			"best": bez,
+			// "data": responses,
+			// "atas": terbaik,
+			// "best": bez,
+			"best": best_final,
 		})
 	}
 }
@@ -786,6 +789,13 @@ func (h *handlerTag) NewArr(c *gin.Context) {
 		new = append(new, newarr[i])
 	}
 
+	responses := []item.CatResponse{}
+	for _, i := range new {
+		thumb, _ := h.itemService.Thumbnail(i.ID)
+		res := convertToResponseCatalog(i, thumb)
+		responses = append(responses, res)
+	}
+
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -794,7 +804,74 @@ func (h *handlerTag) NewArr(c *gin.Context) {
 		return
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
-			"data": new,
+			"data": responses,
+		})
+	}
+}
+
+func (h *handlerTag) Recommended(c *gin.Context) {
+	items, err := h.itemService.FindAll("", "")
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
+	// responses := []item.CatResponse{}
+	responses := []item.BestRes{}
+	for _, i := range items {
+		best, _ := h.itemService.CountSell(i.ID)
+		res := convertToResponseBest(i.ID, best)
+		// res := best
+		responses = append(responses, res)
+	}
+
+	terbaik := item.BestRes{}
+	for _, i := range responses {
+		// best, _ := h.itemService.CountSell(i.ID)
+		// res := convertToResponseBest(i.ID, best)
+		// res := best
+		if i.Sale > terbaik.Sale {
+			terbaik = i
+		}
+		// responses = append(responses, res)
+	}
+
+	// newarr, err := h.itemService.NewArr()
+	bez, err := h.itemService.ItemDetail(terbaik.ID)
+	// filter := c.Query("filter")
+	// sort := c.Query("sort")
+
+	// best, err := h.itemService.BestSeller()
+	newarr, err := h.itemService.NewArr()
+	new := []item.Item{}
+
+	for i := 0; i < 2; i++ {
+		new = append(new, newarr[i])
+	}
+
+	final := []item.Item{}
+	final = append(final, bez)
+	final = append(final, new[0])
+	final = append(final, new[1])
+
+	responsesfinal := []item.CatResponse{}
+	for _, i := range final {
+		thumb, _ := h.itemService.Thumbnail(i.ID)
+		resfinal := convertToResponseCatalog(i, thumb)
+		responsesfinal = append(responsesfinal, resfinal)
+	}
+
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"data": responsesfinal,
 		})
 	}
 }

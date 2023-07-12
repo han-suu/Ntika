@@ -99,6 +99,7 @@ func main() {
 	v1.POST("/update-stock", middleware.RequireAuth, itemHandler.UpdateStock)
 	v1.GET("/best", itemHandler.BestSeller)
 	v1.GET("/newarr", itemHandler.NewArr)
+	v1.GET("/recommended", itemHandler.Recommended)
 	// v1.GET("/products/{ID}", itemHandler.Catalog)
 
 	// ORDER
