@@ -174,7 +174,12 @@ func (h *handlerTag) AddToCart(c *gin.Context) {
 	println("HAND2")
 	user, _ := c.Get("user")
 	find, err := h.userService.FindByEmail(user)
-
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "GAGAL GES, mungkin belum ada",
+		})
+		return
+	}
 	println("HAND")
 	h.itemService.AddToCart(cart, find)
 	// images := item.Images
@@ -672,6 +677,34 @@ func (h *handlerTag) AdminFin(c *gin.Context) {
 			"err": err,
 		})
 	}
+	orderitems, _ := h.itemService.GetOrderItem(id)
+
+	for _, j := range orderitems {
+		// item, _ := h.itemService.ItemDetail(j.Product_ID)
+		size := 0
+		if j.Size == "s" {
+			size = 1
+		} else if j.Size == "m" {
+			size = 2
+		} else if j.Size == "l" {
+			size = 3
+		} else if j.Size == "xl" {
+			size = 4
+		}
+		PSS, _ := h.itemService.GetItemStock(j.Product_ID)
+
+		for _, i := range PSS {
+			if i.Size_ID == size {
+				setok := item.StockInput{
+					Product_ID: i.Product_ID,
+					Size_ID:    i.Size_ID,
+					Stock:      j.Quantity,
+				}
+				h.itemService.UpdateStock(setok)
+			}
+		}
+	}
+
 	_, err = h.itemService.AdminFin(id)
 
 	if err != nil {
