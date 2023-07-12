@@ -27,11 +27,14 @@ type Service interface {
 	Order(ID int, orderInput OrderInput) (Orders, error)
 	CreateOrderItem(item CartItem, ID int) (OrderItem, error)
 	UserHistory(user auth.User) ([]Orders, error)
-	GetOrderItem(order Orders) ([]OrderItem, error)
+	GetOrderItem(ID int) ([]OrderItem, error)
 	AdminOrder() ([]Orders, error)
 	AdminACC(ID int) (Orders, error)
 	AdminCancel(ID int) (Orders, error)
 	AdminFin(ID int) (Orders, error)
+	BestSeller() ([]Item, error)
+	NewArr() (Item, error)
+	MinStock(stockInput StockInput) (Product_size_stock, error)
 }
 
 type service struct {
@@ -105,6 +108,19 @@ func (s *service) AddToCart(itemInput CartInput, user auth.User) (CartItem, erro
 	return newtag, err
 }
 
+func (s *service) MinStock(stockInput StockInput) (Product_size_stock, error) {
+	item, err := s.repository.FindStock(stockInput.Product_ID, stockInput.Size_ID)
+	if err != nil {
+		fmt.Println(err)
+		return item, err
+	}
+	item.Stock -= stockInput.Stock
+
+	newstock, err := s.repository.UpdateStock(item)
+	fmt.Printf("error service %s", err)
+	fmt.Println("")
+	return newstock, err
+}
 func (s *service) UpdateStock(stockInput StockInput) (Product_size_stock, error) {
 
 	// item_stock := Product_size_stock{
@@ -257,8 +273,8 @@ func (s *service) UserHistory(user auth.User) ([]Orders, error) {
 
 }
 
-func (s *service) GetOrderItem(order Orders) ([]OrderItem, error) {
-	cart, err := s.repository.GetOrderItem(order.ID)
+func (s *service) GetOrderItem(ID int) ([]OrderItem, error) {
+	cart, err := s.repository.GetOrderItem(ID)
 	return cart, err
 
 }
@@ -308,6 +324,26 @@ func (s *service) AdminFin(ID int) (Orders, error) {
 		fmt.Println(err)
 	}
 	return orders, err
+
+}
+
+func (s *service) BestSeller() ([]Item, error) {
+	items, err := s.repository.BestSeller()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return items, err
+
+}
+
+func (s *service) NewArr() (Item, error) {
+
+	item, err := s.repository.NewArr()
+	if err != nil {
+		fmt.Println(err)
+	}
+	return item, err
 
 }
 

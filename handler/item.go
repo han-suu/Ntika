@@ -513,7 +513,7 @@ func (h *handlerTag) UserHistory(c *gin.Context) {
 	responses := []item.HistoryResponse{}
 	responses_oi := []item.OrderItemResponse{}
 	for _, i := range orders {
-		orderitems, _ := h.itemService.GetOrderItem(i)
+		orderitems, _ := h.itemService.GetOrderItem(i.ID)
 
 		for _, j := range orderitems {
 			thumb, _ := h.itemService.Thumbnail(j.Product_ID)
@@ -580,15 +580,57 @@ func (h *handlerTag) AdminACC(c *gin.Context) {
 	id, err := strconv.Atoi(idString)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "Gagal Cancel",
+			"msg": "Gagal ACC1",
 			"err": err,
 		})
 	}
+
+	orderitems, _ := h.itemService.GetOrderItem(id)
+
+	for _, j := range orderitems {
+		// item, _ := h.itemService.ItemDetail(j.Product_ID)
+		size := 0
+		if j.Size == "s" {
+			size = 1
+		} else if j.Size == "m" {
+			size = 2
+		} else if j.Size == "l" {
+			size = 3
+		} else if j.Size == "xl" {
+			size = 4
+		}
+		PSS, _ := h.itemService.GetItemStock(j.Product_ID)
+
+		for _, i := range PSS {
+			if i.Size_ID == size {
+				fmt.Println(i.Stock)
+				fmt.Println(j.Quantity)
+				if i.Stock-j.Quantity < 0 {
+					fmt.Println("MIN GAN")
+					c.JSON(http.StatusBadRequest, gin.H{
+						"msg": "Gagal ACC, stok item(s) jadi minus",
+					})
+					return
+				} else {
+					setok := item.StockInput{
+						Product_ID: i.Product_ID,
+						Size_ID:    i.Size_ID,
+						Stock:      j.Quantity,
+					}
+					h.itemService.MinStock(setok)
+
+				}
+			}
+		}
+		// res1 := convertToResponseOrderItem(thumb, j, item)
+		// responses_oi = append(responses_oi, res1)
+	}
 	_, err = h.itemService.AdminACC(id)
 
+	fmt.Println("BRASIL")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "Gagal ACC",
+			"msg": "Gagal ACC3",
 			"err": err,
 		})
 	} else {
@@ -626,7 +668,7 @@ func (h *handlerTag) AdminFin(c *gin.Context) {
 	id, err := strconv.Atoi(idString)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "Gagal Cancel",
+			"msg": "Gagal Fin",
 			"err": err,
 		})
 	}
@@ -643,3 +685,43 @@ func (h *handlerTag) AdminFin(c *gin.Context) {
 		})
 	}
 }
+
+// func (h *handlerTag) BestSeller(c *gin.Context) {
+// 	// filter := c.Query("filter")
+// 	// sort := c.Query("sort")
+
+// 	best, err := h.itemService.BestSeller()
+// 	// newarr, err := h.itemService.NewArr()
+
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"msg": err,
+// 		})
+// 		return
+// 	} else {
+// 		c.JSON(http.StatusCreated, gin.H{
+// 			"data": best,
+// 		})
+// 	}
+// }
+
+// func (h *handlerTag) NewArr(c *gin.Context) {
+// 	// filter := c.Query("filter")
+// 	// sort := c.Query("sort")
+
+// 	// best, err := h.itemService.BestSeller()
+// 	newarr, err := h.itemService.NewArr()
+
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"msg": err,
+// 		})
+// 		return
+// 	} else {
+// 		c.JSON(http.StatusCreated, gin.H{
+// 			"data": newarr,
+// 		})
+// 	}
+// }

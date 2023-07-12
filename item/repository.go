@@ -22,6 +22,8 @@ type Repository interface {
 	Order(order Orders) (Orders, error)
 	CreateOrderItem(item OrderItem) (OrderItem, error)
 	UserHistory(ID int) ([]Orders, error)
+	BestSeller() ([]Item, error)
+	NewArr() (Item, error)
 	// -----------------------------------
 	AdminOrder() ([]Orders, error)
 	GetOrder(ID int) (Orders, error)
@@ -338,6 +340,36 @@ func (r *repository) AdminUpdateOrder(order Orders) (Orders, error) {
 		println("=====================")
 	}
 	return order, err
+}
+
+func (r *repository) BestSeller() ([]Item, error) {
+	var item []Item
+	base := r.db.Debug()
+
+	err := base.Find(&item).Error // Query your results
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE F")
+		println("=====================")
+	}
+
+	return item, err
+
+}
+
+func (r *repository) NewArr() (Item, error) {
+	var item Item
+	base := r.db.Debug()
+
+	err := base.First(&item).Error // Query your results
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE F")
+		println("=====================")
+	}
+
+	return item, err
+
 }
 
 // DEV-Only==============================================
