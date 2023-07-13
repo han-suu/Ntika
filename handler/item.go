@@ -754,6 +754,8 @@ func (h *handlerTag) BestSeller(c *gin.Context) {
 	bez, err := h.itemService.ItemDetail(terbaik.ID)
 	thumb, _ := h.itemService.Thumbnail(bez.ID)
 	best_final := convertToResponseCatalog(bez, thumb)
+	responsesBest := []item.CatResponse{}
+	responsesBest = append(responsesBest, best_final)
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -765,7 +767,7 @@ func (h *handlerTag) BestSeller(c *gin.Context) {
 			// "data": responses,
 			// "atas": terbaik,
 			// "best": bez,
-			"best": best_final,
+			"best": responsesBest,
 		})
 	}
 }
