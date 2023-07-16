@@ -93,6 +93,7 @@ func main() {
 	// v1.GET("/change_name", middleware.RequireAuth, itemHandler.)
 
 	// ITEM
+	v1.GET("/ongkir", itemHandler.GetOngkir)
 	v1.GET("/products", itemHandler.Catalog)
 	v1.GET("/thumbnail/:id", itemHandler.Thumbnail)
 	v1.GET("/product/:id", itemHandler.ItemDetail)

@@ -1,6 +1,7 @@
 package item
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -29,7 +30,8 @@ type Repository interface {
 	GetOrder(ID int) (Orders, error)
 	AdminUpdateOrder(order Orders) (Orders, error)
 	// AdminUpdateOngkir(ongkir Ongkir_tb) (Ongkir_tb, error)
-	AdminUpdateOngkir(ongkir int) (Ongkir_tb, error)
+	GetOngkir() (Ongkir_tb, error)
+	AdminUpdateOngkir(ongkir Ongkir_tb) (Ongkir_tb, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -379,32 +381,46 @@ func (r *repository) NewArr() ([]Item, error) {
 
 }
 
-// func (r *repository) AdminUpdateOngkir(ongkir Ongkir_tb) (Ongkir_tb, error) {
-// 	err := r.db.Create(&ongkir).Error
-// 	if err != nil {
-// 		println("=====================")
-// 		println("ERROR WHILE Updating")
-// 		println("=====================")
-// 	}
-// 	return ongkir, err
-// }
-
-func (r *repository) AdminUpdateOngkir(ongkir int) (Ongkir_tb, error) {
+func (r *repository) GetOngkir() (Ongkir_tb, error) {
 	ongkir_obj := Ongkir_tb{}
 	err := r.db.First(&ongkir_obj).Error
+	fmt.Println(ongkir_obj)
 	if err != nil {
 		println("=====================")
-		println("ERROR WHILE Updating")
+		println("ERROR WHILE Getting")
 		println("=====================")
 	}
-	ongkir_obj.Ongkir = ongkir
-	err = r.db.Save(&ongkir_obj).Error
-	if err != nil {
-		println("=====================")
-		println("ERROR WHILE Updating")
-		println("=====================")
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		err = nil
+		ongkir := Ongkir_tb{
+			Ongkir: 10000,
+		}
+		err := r.db.Create(&ongkir).Error
+		if err != nil {
+			println("=====================")
+			println("ERROR WHILE CreateOngkir")
+			println("=====================")
+		}
+		err = r.db.First(&ongkir_obj).Error
+		if err != nil {
+			println("=====================")
+			println("ERROR WHILE Getting2")
+			println("=====================")
+		}
+		fmt.Println(ongkir_obj)
 	}
+
 	return ongkir_obj, err
+}
+
+func (r *repository) AdminUpdateOngkir(ongkir Ongkir_tb) (Ongkir_tb, error) {
+	err := r.db.Save(&ongkir).Error
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE Updating")
+		println("=====================")
+	}
+	return ongkir, err
 }
 
 // DEV-Only==============================================

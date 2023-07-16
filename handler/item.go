@@ -921,6 +921,21 @@ func (h *handlerTag) Recommended(c *gin.Context) {
 		})
 	}
 }
+func (h *handlerTag) GetOngkir(c *gin.Context) {
+
+	ongkir, err := h.itemService.GetOngkir()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal GetOngkir",
+			"err": err,
+		})
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"data": ongkir,
+		})
+	}
+}
 
 func (h *handlerTag) AdminUpdateOngkir(c *gin.Context) {
 	idString := c.Param("ongkir")
@@ -931,7 +946,7 @@ func (h *handlerTag) AdminUpdateOngkir(c *gin.Context) {
 			"err": err,
 		})
 	}
-	_, err = h.itemService.AdminUpdateOngkir(ongkir)
+	newongkir, err := h.itemService.AdminUpdateOngkir(ongkir)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -940,7 +955,7 @@ func (h *handlerTag) AdminUpdateOngkir(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
-			"msgs": "Update Berhasil",
+			"data": newongkir,
 		})
 	}
 }

@@ -35,6 +35,7 @@ type Service interface {
 	CountSell(ID int) (int64, error)
 	NewArr() ([]Item, error)
 	MinStock(stockInput StockInput) (Product_size_stock, error)
+	GetOngkir() (Ongkir_tb, error)
 	AdminUpdateOngkir(OngkirInput int) (Ongkir_tb, error)
 }
 
@@ -348,12 +349,25 @@ func (s *service) NewArr() ([]Item, error) {
 
 }
 
+func (s *service) GetOngkir() (Ongkir_tb, error) {
+	ongkir_tb, err := s.repository.GetOngkir()
+	if err != nil {
+		fmt.Println(err)
+	}
+	return ongkir_tb, err
+}
+
 func (s *service) AdminUpdateOngkir(OngkirInput int) (Ongkir_tb, error) {
 	// ong := Ongkir_tb{
 	// 	Ongkir: OngkirInput,
 	// }
-	// ongkir_tb, err := s.repository.AdminUpdateOngkir(ong)
-	ongkir_tb, err := s.repository.AdminUpdateOngkir(OngkirInput)
+	ongkir, err := s.repository.GetOngkir()
+	if err != nil {
+		fmt.Println(err)
+	}
+	ongkir.Ongkir = OngkirInput
+
+	ongkir_tb, err := s.repository.AdminUpdateOngkir(ongkir)
 	if err != nil {
 		fmt.Println(err)
 	}
