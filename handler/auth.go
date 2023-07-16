@@ -249,3 +249,40 @@ func convertToResponse(b auth.User) auth.UserResponse {
 	return user
 
 }
+
+func (h *handler) UpdatePassword(c *gin.Context) {
+	user_email := Ambil(c)
+	fmt.Println(user_email)
+
+	var pass auth.PasswordInput
+
+	err := c.ShouldBind(&pass)
+	if err != nil {
+
+		messages := []string{}
+
+		for _, e := range err.(validator.ValidationErrors) {
+			errormsg := fmt.Sprintf("Error pada field %s, condition %s", e.Field(), e.ActualTag())
+			messages = append(messages, errormsg)
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": messages,
+		})
+		return
+
+	}
+	fmt.Println(pass)
+	newpass, err := h.userService.UpdatePassword(pass, user_email)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Update Password",
+			"err": err,
+		})
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"msgs": "Update Password Berhasil",
+			"data": newpass,
+		})
+	}
+}

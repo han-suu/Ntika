@@ -17,3 +17,8 @@ type AddressInput struct {
 	Phone   string `json:"phone"`
 	Address string `json:"address"`
 }
+
+type PasswordInput struct {
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
+}

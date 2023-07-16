@@ -90,6 +90,7 @@ func main() {
 	v1.GET("/user", middleware.RequireAuth, userHandler.UserProfile)
 	v1.PUT("/change_address", middleware.RequireAuth, userHandler.UpdateAddress)
 	v1.GET("/user/order", middleware.RequireAuth, itemHandler.UserHistory)
+	v1.PUT("/change_password", middleware.RequireAuth, userHandler.UpdatePassword)
 	// v1.GET("/change_name", middleware.RequireAuth, itemHandler.)
 
 	// ITEM

@@ -12,6 +12,7 @@ type Service interface {
 	Create(userInput UserInput) (User, error)
 	SignIn(signin SignIn) (User, error)
 	UpdateAddress(addressInput AddressInput, user_email string) (User, error)
+	UpdatePassword(passwordInput PasswordInput, user_email string) (User, error)
 }
 
 type service struct {
@@ -37,7 +38,7 @@ func (s *service) Create(userInput UserInput) (User, error) {
 }
 
 func (s *service) SignIn(signin SignIn) (User, error) {
-
+	fmt.Println(signin)
 	user, err := s.repository.SignIn(signin)
 	return user, err
 }
@@ -72,4 +73,29 @@ func (s *service) UpdateAddress(addressInput AddressInput, user_email string) (U
 func (s *service) FindByEmail(email any) (User, error) {
 	user, err := s.repository.FindByEmail(email)
 	return user, err
+}
+
+func (s *service) UpdatePassword(passwordInput PasswordInput, user_email string) (User, error) {
+
+	user, err := s.repository.FindByEmail(user_email)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(passwordInput)
+	println(passwordInput.OldPassword)
+	login := SignIn{
+		Email:    user_email,
+		Password: passwordInput.OldPassword,
+	}
+	fmt.Println(login)
+	user_login, err := s.repository.SignIn(login)
+	if err != nil {
+		return user_login, err
+	}
+	fmt.Println("LOLOS")
+	hash, _ := bcrypt.GenerateFromPassword([]byte(passwordInput.NewPassword), 10)
+	user.Password = string(hash)
+	newpass, err := s.repository.UpdateAddress(user)
+	return newpass, err
 }
