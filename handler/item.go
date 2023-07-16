@@ -879,6 +879,13 @@ func (h *handlerTag) Recommended(c *gin.Context) {
 
 	// newarr, err := h.itemService.NewArr()
 	bez, err := h.itemService.ItemDetail(terbaik.ID)
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": err,
+		})
+		return
+	}
 	// filter := c.Query("filter")
 	// sort := c.Query("sort")
 
@@ -911,6 +918,29 @@ func (h *handlerTag) Recommended(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusCreated, gin.H{
 			"data": responsesfinal,
+		})
+	}
+}
+
+func (h *handlerTag) AdminUpdateOngkir(c *gin.Context) {
+	idString := c.Param("ongkir")
+	ongkir, err := strconv.Atoi(idString)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Cancel",
+			"err": err,
+		})
+	}
+	_, err = h.itemService.AdminUpdateOngkir(ongkir)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Gagal Update",
+			"err": err,
+		})
+	} else {
+		c.JSON(http.StatusCreated, gin.H{
+			"msgs": "Update Berhasil",
 		})
 	}
 }

@@ -40,6 +40,7 @@ func main() {
 	db.AutoMigrate(&item.Images2{})
 	db.AutoMigrate(&item.Size{})
 	db.AutoMigrate(&item.Product_size_stock{})
+	db.AutoMigrate(&item.Ongkir_tb{})
 	// db.AutoMigrate(&tag.SongTag{})
 
 	userRepository := auth.NewRepo(db)
@@ -74,6 +75,7 @@ func main() {
 	// ADMIN
 	v1.POST("/item", itemHandler.Create)
 	v1.GET("/admin/order", middleware.RequireAuth, itemHandler.AdminOrder)
+	v1.PUT("/admin/ongkir/:ongkir", middleware.RequireAuth, itemHandler.AdminUpdateOngkir)
 	v1.PUT("/admin/konfirmasi/:id", middleware.RequireAuth, itemHandler.AdminACC)
 	v1.PUT("/admin/cancel/:id", middleware.RequireAuth, itemHandler.AdminCancel)
 	v1.PUT("/admin/finish/:id", middleware.RequireAuth, itemHandler.AdminFin)

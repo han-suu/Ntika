@@ -88,3 +88,11 @@ type Product_size_stock struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type Ongkir_tb struct {
+	ID     int
+	Ongkir int
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}

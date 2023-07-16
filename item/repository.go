@@ -28,6 +28,8 @@ type Repository interface {
 	AdminOrder(filter string) ([]Orders, error)
 	GetOrder(ID int) (Orders, error)
 	AdminUpdateOrder(order Orders) (Orders, error)
+	// AdminUpdateOngkir(ongkir Ongkir_tb) (Ongkir_tb, error)
+	AdminUpdateOngkir(ongkir int) (Ongkir_tb, error)
 	// ============================
 	Pap(img Images2) (Images2, error)
 	AddSize(size Size) (Size, error)
@@ -375,6 +377,34 @@ func (r *repository) NewArr() ([]Item, error) {
 
 	return item, err
 
+}
+
+// func (r *repository) AdminUpdateOngkir(ongkir Ongkir_tb) (Ongkir_tb, error) {
+// 	err := r.db.Create(&ongkir).Error
+// 	if err != nil {
+// 		println("=====================")
+// 		println("ERROR WHILE Updating")
+// 		println("=====================")
+// 	}
+// 	return ongkir, err
+// }
+
+func (r *repository) AdminUpdateOngkir(ongkir int) (Ongkir_tb, error) {
+	ongkir_obj := Ongkir_tb{}
+	err := r.db.First(&ongkir_obj).Error
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE Updating")
+		println("=====================")
+	}
+	ongkir_obj.Ongkir = ongkir
+	err = r.db.Save(&ongkir_obj).Error
+	if err != nil {
+		println("=====================")
+		println("ERROR WHILE Updating")
+		println("=====================")
+	}
+	return ongkir_obj, err
 }
 
 // DEV-Only==============================================

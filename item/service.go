@@ -35,6 +35,7 @@ type Service interface {
 	CountSell(ID int) (int64, error)
 	NewArr() ([]Item, error)
 	MinStock(stockInput StockInput) (Product_size_stock, error)
+	AdminUpdateOngkir(OngkirInput int) (Ongkir_tb, error)
 }
 
 type service struct {
@@ -344,6 +345,19 @@ func (s *service) NewArr() ([]Item, error) {
 		fmt.Println(err)
 	}
 	return items, err
+
+}
+
+func (s *service) AdminUpdateOngkir(OngkirInput int) (Ongkir_tb, error) {
+	// ong := Ongkir_tb{
+	// 	Ongkir: OngkirInput,
+	// }
+	// ongkir_tb, err := s.repository.AdminUpdateOngkir(ong)
+	ongkir_tb, err := s.repository.AdminUpdateOngkir(OngkirInput)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return ongkir_tb, err
 
 }
 
