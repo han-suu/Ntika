@@ -25,7 +25,7 @@ type Repository interface {
 	CountSell(ID int) (int64, error)
 	NewArr() ([]Item, error)
 	// -----------------------------------
-	AdminOrder() ([]Orders, error)
+	AdminOrder(filter string) ([]Orders, error)
 	GetOrder(ID int) (Orders, error)
 	AdminUpdateOrder(order Orders) (Orders, error)
 	// ============================
@@ -304,9 +304,12 @@ func (r *repository) GetOrderItem(ID int) ([]OrderItem, error) {
 	return items, err
 }
 
-func (r *repository) AdminOrder() ([]Orders, error) {
+func (r *repository) AdminOrder(filter string) ([]Orders, error) {
 	var orders []Orders
 	base := r.db.Debug()
+	if filter != "" {
+		base = base.Where(&Orders{Status: filter}) // Adding this condition just if someThing is true
+	}
 
 	err := base.Find(&orders).Error // Query your results
 	if err != nil {

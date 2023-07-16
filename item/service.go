@@ -28,7 +28,7 @@ type Service interface {
 	CreateOrderItem(item CartItem, ID int) (OrderItem, error)
 	UserHistory(user auth.User) ([]Orders, error)
 	GetOrderItem(ID int) ([]OrderItem, error)
-	AdminOrder() ([]Orders, error)
+	AdminOrder(filter string) ([]Orders, error)
 	AdminACC(ID int) (Orders, error)
 	AdminCancel(ID int) (Orders, error)
 	AdminFin(ID int) (Orders, error)
@@ -279,8 +279,8 @@ func (s *service) GetOrderItem(ID int) ([]OrderItem, error) {
 
 }
 
-func (s *service) AdminOrder() ([]Orders, error) {
-	orders, err := s.repository.AdminOrder()
+func (s *service) AdminOrder(filter string) ([]Orders, error) {
+	orders, err := s.repository.AdminOrder(filter)
 	return orders, err
 
 }

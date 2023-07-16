@@ -567,7 +567,8 @@ func convertToResponseHistory(o item.Orders, oi []item.OrderItemResponse) item.H
 }
 
 func (h *handlerTag) AdminOrder(c *gin.Context) {
-	orders, err := h.itemService.AdminOrder()
+	filter := c.Query("filter")
+	orders, err := h.itemService.AdminOrder(filter)
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
