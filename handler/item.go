@@ -569,6 +569,23 @@ func convertToResponseHistory(o item.Orders, oi []item.OrderItemResponse) item.H
 func (h *handlerTag) AdminOrder(c *gin.Context) {
 	filter := c.Query("filter")
 	orders, err := h.itemService.AdminOrder(filter)
+
+	responses := []item.HistoryAdminResponse{}
+	responses_oi := []item.OrderItemResponse{}
+	for _, i := range orders {
+		orderitems, _ := h.itemService.GetOrderItem(i.ID)
+
+		for _, j := range orderitems {
+			thumb, _ := h.itemService.Thumbnail(j.Product_ID)
+			item, _ := h.itemService.ItemDetail(j.Product_ID)
+			res1 := convertToResponseOrderItem(thumb, j, item)
+			responses_oi = append(responses_oi, res1)
+		}
+
+		res := convertToResponseHistoryAdmin(i, responses_oi)
+		responses = append(responses, res)
+		responses_oi = []item.OrderItemResponse{}
+	}
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -577,8 +594,27 @@ func (h *handlerTag) AdminOrder(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"data": orders,
+		"data": responses,
 	})
+}
+
+func convertToResponseHistoryAdmin(o item.Orders, oi []item.OrderItemResponse) item.HistoryAdminResponse {
+	start := o.StartDate.Format("2006-01-02")
+	end := o.EndDate.Format("2006-01-02")
+
+	res := item.HistoryAdminResponse{
+		ID:              o.ID,
+		Address:         o.Address,
+		Shipping_Method: o.Shipping_Method,
+		Total:           o.Total_Price,
+		Start:           start,
+		End:             end,
+		Durasi:          o.Durasi,
+		Status:          o.Status,
+		Items:           oi,
+	}
+	return res
+
 }
 
 func (h *handlerTag) AdminACC(c *gin.Context) {

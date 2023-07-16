@@ -52,3 +52,15 @@ type BestRes struct {
 	ID   int   `json:"id"`
 	Sale int64 `json:"sales"`
 }
+
+type HistoryAdminResponse struct {
+	ID              int                 `json:"id"`
+	Address         string              `json:"address"`
+	Shipping_Method string              `json:"shipping_method"`
+	Total           int                 `json:"total"`
+	Start           string              `json:"start"`
+	End             string              `json:"end"`
+	Durasi          int                 `json:"durasi"`
+	Status          string              `json:"status"`
+	Items           []OrderItemResponse `json:"items"`
+}
